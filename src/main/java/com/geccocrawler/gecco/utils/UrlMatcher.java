@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.common.base.Strings;
+
 public class UrlMatcher {
 
 	private static Log log = LogFactory.getLog(UrlMatcher.class);
@@ -97,6 +99,10 @@ public class UrlMatcher {
 					//boolean x = matcher2.requireEnd();
 					try {
 						value = URLDecoder.decode(value, "UTF-8");
+						// 匹配值为空时，认为匹配不上
+						if(Strings.isNullOrEmpty(value)) {
+						    return null;
+						}
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 					}
