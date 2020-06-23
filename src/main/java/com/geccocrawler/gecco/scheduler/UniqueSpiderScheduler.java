@@ -51,18 +51,24 @@ public class UniqueSpiderScheduler implements Scheduler {
 		return request;
 	}
 
-	@Override
-	public void into(HttpRequest request) {
-		long priority = System.nanoTime();
-		boolean success = set.add(new SortHttpRequest(priority, request));
-		if(success && log.isDebugEnabled()) {
-			log.debug("INTO("+priority+"):"+request.getUrl()+"(Referer:"+request.getHeaders().get("Referer")+")");
-		}
-		if(!success && log.isDebugEnabled()) {
-			log.error("not unique request : " + request.getUrl());
-		}
-	}
+    @Override
+    public void into(HttpRequest request) {
+        long priority = System.nanoTime();
+        into(request, priority);
+    }
 	
+    @Override
+    public void into(HttpRequest request, long priority) {
+        boolean success = set.add(new SortHttpRequest(priority, request));
+        if (success && log.isDebugEnabled()) {
+            log.debug("INTO(" + priority + "):" + request.getUrl() + "(Referer:" + request.getHeaders().get("Referer") + ")");
+        }
+        if (!success && log.isDebugEnabled()) {
+            log.error("not unique request : " + request.getUrl());
+        }
+    }
+	
+    // 其实HttpRequest已经实现了优先级功能，这个类没必要
 	private class SortHttpRequest {
 		
 		private long priority;

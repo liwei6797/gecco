@@ -3,6 +3,8 @@ package com.geccocrawler.gecco.response;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
+import org.apache.http.Header;
+
 import com.google.common.io.CharStreams;
 
 public class HttpResponse {
@@ -15,6 +17,8 @@ public class HttpResponse {
 	private String charset;
 
 	private int status;
+	
+	private Header[] headers;
 	
 	public static HttpResponse createSimple(String content) {
 		HttpResponse response = new HttpResponse();
@@ -74,7 +78,15 @@ public class HttpResponse {
 		this.charset = charset;
 	}
 
-	public void close() {
+	public Header[] getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Header[] headers) {
+        this.headers = headers;
+    }
+
+    public void close() {
 		if(raw != null) {
 			try{
 				raw.close();

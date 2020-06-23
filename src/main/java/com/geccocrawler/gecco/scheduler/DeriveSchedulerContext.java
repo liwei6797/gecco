@@ -10,9 +10,13 @@ import com.geccocrawler.gecco.spider.SpiderThreadLocal;
  *
  */
 public class DeriveSchedulerContext {
-	
-	public static void into(HttpRequest request) {
-		SpiderThreadLocal.get().getSpiderScheduler().into(request);
-	}
+
+    public static void into(HttpRequest request) {
+        SpiderThreadLocal.get().getSpiderScheduler().into(request);
+    }
+
+    public static void into(HttpRequest request, long priority) {
+        SpiderThreadLocal.get().getSpiderScheduler().into(request, priority);
+    }
 
 }

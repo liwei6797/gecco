@@ -97,4 +97,10 @@ public class FIFOScheduler implements Scheduler {
 			outLock.unlock();
 		}
 	}
+
+    @Override
+    public void into(HttpRequest request, long priority) {
+        into(request);
+        
+    }
 }

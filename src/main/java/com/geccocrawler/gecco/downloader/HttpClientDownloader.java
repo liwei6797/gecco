@@ -172,7 +172,7 @@ public class HttpClientDownloader extends AbstractDownloader {
 				cookie.setDomain(reqObj.getURI().getHost());
 				cookieContext.getCookieStore().addCookie(cookie);
 			}
-			org.apache.http.HttpResponse response = httpClient.execute(reqObj, cookieContext);
+			org.apache.http.HttpResponse response = httpClient.execute(reqObj, cookieContext);			
 			int status = response.getStatusLine().getStatusCode();
 			HttpResponse resp = new HttpResponse();
 			resp.setStatus(status);
@@ -180,7 +180,7 @@ public class HttpClientDownloader extends AbstractDownloader {
 				String redirectUrl = response.getFirstHeader("Location").getValue();
 				resp.setContent(UrlUtils.relative2Absolute(request.getUrl(), redirectUrl));
 			} else if(status == 200) {
-				HttpEntity responseEntity = response.getEntity();
+				HttpEntity responseEntity = response.getEntity();				
 				ByteArrayInputStream raw = toByteInputStream(responseEntity.getContent());
 				resp.setRaw(raw);
 				String contentType = null;
@@ -196,6 +196,9 @@ public class HttpClientDownloader extends AbstractDownloader {
 					String content = getContent(raw, responseEntity.getContentLength(), charset);
 					resp.setContent(content);
 				}
+				// 把响应头存一下，主要是为了拿Set-Cookie
+				Header[] headers = response.getAllHeaders();
+				resp.setHeaders(headers);
 			} else {
 				//404，500等
 				if(proxy != null) {

@@ -28,5 +28,11 @@ public class NoLoopStartScheduler implements Scheduler {
 	public void into(HttpRequest request) {
 		queue.offer(request);
 	}
+	
+	@Override
+    public void into(HttpRequest request, long priority) {
+        into(request);
+        
+    }
 
 }

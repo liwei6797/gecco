@@ -14,4 +14,6 @@ public interface Scheduler {
 	
 	public void into(HttpRequest request);
 	
+	public void into(HttpRequest request, long priority);
+	
 }
