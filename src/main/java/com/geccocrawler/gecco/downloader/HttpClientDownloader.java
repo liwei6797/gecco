@@ -36,6 +36,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -166,12 +167,19 @@ public class HttpClientDownloader extends AbstractDownloader {
 		reqObj.setConfig(builder.build());
 		//request and response
 		try {
+            // 先清掉,cookie的双引号问题会引起错误
+            cookieContext.getCookieStore().clear();
 			for(Map.Entry<String, String> entry : request.getCookies().entrySet()) {
 				BasicClientCookie cookie = new BasicClientCookie(entry.getKey(), entry.getValue());
 				cookie.setPath("/");
-				cookie.setDomain(reqObj.getURI().getHost());
-				cookieContext.getCookieStore().addCookie(cookie);
+				cookie.setDomain(reqObj.getURI().getHost());				
+				cookieContext.getCookieStore().addCookie(cookie);				
+			}		
+			
+			for(Cookie cookie : cookieContext.getCookieStore().getCookies()) {
+			    log.info("HttpClientDownloader cookie:" +  cookie.toString());
 			}
+			
 			org.apache.http.HttpResponse response = httpClient.execute(reqObj, cookieContext);			
 			int status = response.getStatusLine().getStatusCode();
 			HttpResponse resp = new HttpResponse();
